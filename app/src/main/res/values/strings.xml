@@ -4,4 +4,13 @@
     <string name="tempHome">Home Page</string>
     <string name="tempSettings">Settings Page</string>
     <string name="tempAlarm">Alarm Page</string>
+
+    //Alarm page
+    <string name="AlarmHeader">My Alarms</string>
+    <string name="addNewAlarm">Add New Alarm</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_your_new_alarm">Create Your New Alarm</string>
+    <string name="alarm_nameInput">Alarm Name:</string>
+    <string name="set_time_Input">Set time</string>
 </resources>

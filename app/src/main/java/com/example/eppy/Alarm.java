@@ -2,11 +2,19 @@ package com.example.eppy;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +66,46 @@ public class Alarm extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_alarm, container, false);
+
+        //redirect user to add new button form page
+        Button addNewRedirect = view.findViewById(R.id.newAlarmBtn);
+
+        addNewRedirect.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                MainActivity.getNavController().navigate(R.id.addAlarmForm);
+            }
+        });
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_alarm, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+
+        //testing
+        AlarmItem boo = new AlarmItem(), boo2 = new AlarmItem();
+        boo.setAlarmName("Dingus");
+        boo.setAlarmTime(8.5);
+        boo2.setAlarmName("PringleTube");
+        boo2.setAlarmTime(21);
+        //list tasks
+        List<AlarmItem> alarms = new ArrayList<>();
+        alarms.add(boo);
+        alarms.add(boo2);
+
+        //get list view to display alarms
+        ListView lv_alarms = view.findViewById(R.id.alarm_lv);
+
+        //use the alarms array adapter in list view
+        AlarmListItemViewAdapter adapter = new AlarmListItemViewAdapter(getContext(), R.layout.alarm_list_item, alarms);
+
+        lv_alarms.setAdapter(adapter);
+
     }
 }

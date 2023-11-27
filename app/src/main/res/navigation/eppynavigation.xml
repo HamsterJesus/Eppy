@@ -21,10 +21,26 @@
         android:id="@+id/alarm"
         android:name="com.example.eppy.Alarm"
         android:label="fragment_alarm"
-        tools:layout="@layout/fragment_alarm" />
+        tools:layout="@layout/fragment_alarm" >
+        <action
+            android:id="@+id/action_alarm_to_home2"
+            app:destination="@id/home2" />
+        <action
+            android:id="@+id/action_alarm_to_addAlarmForm"
+            app:destination="@id/addAlarmForm" />
+    </fragment>
     <fragment
         android:id="@+id/settings"
         android:name="com.example.eppy.Settings"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settings_to_home2"
+            app:destination="@id/home2" />
+    </fragment>
+    <fragment
+        android:id="@+id/addAlarmForm"
+        android:name="com.example.eppy.AddAlarmForm"
+        android:label="fragment_add_alarm_form"
+        tools:layout="@layout/fragment_add_alarm_form" />
 </navigation>
