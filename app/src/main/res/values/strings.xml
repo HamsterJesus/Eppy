@@ -11,6 +11,21 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create_your_new_alarm">Create Your New Alarm</string>
-    <string name="alarm_nameInput">Alarm Name:</string>
+    <string name="alarm_nameInput">Alarm Name</string>
     <string name="set_time_Input">Set time</string>
+    <string name="morning_trivia_to_jump_start_your_brain">Morning trivia to jump start your brain!</string>
+    <string name="number_of_questions">Number of Questions(3-10)</string>
+    <string name="select_difficulty">Select Difficulty</string>
+    <string name="save">Save</string>
+
+    //difficulty
+    <string-array name="Difficulty">
+        <item>easy</item>
+        <item>medium</item>
+        <item>hard</item>
+    </string-array>
+
+<!--    <string name="Easy">Easy</string>-->
+<!--    <string name="Medium">Medium</string>-->
+<!--    <string name="Hard">Hard</string>-->
 </resources>

@@ -8,6 +8,36 @@ import java.time.LocalTime;
 
 @Entity(tableName = "alarmTable")
 public class AlarmItem {
+    public void setAlarmSet(boolean set) {
+        alarmSet = set;
+    }
+
+    public boolean isAlarmSet() {
+        return alarmSet;
+    }
+
+    private boolean alarmSet;
+
+    public String getQuizURL() {
+        return quizURL;
+    }
+
+    public void setQuizURL(String quizURL) {
+        this.quizURL = quizURL;
+    }
+
+    private String quizURL;
+
+    public AlarmItem() {
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
 
     @NonNull
     @PrimaryKey(autoGenerate = true)
@@ -23,13 +53,32 @@ public class AlarmItem {
 
     private String alarmName;
 
-    public double getAlarmTime() {
-        return alarmTime;
+    public int getHour() {
+        return hour;
     }
 
-    public void setAlarmTime(double alarmTime) {
-        this.alarmTime = alarmTime;
+    public void setHour(int hour) {
+        this.hour = hour;
     }
 
-    private double alarmTime;
+    //    public double getAlarmTime() {
+//        return alarmTime;
+//    }
+//
+//    public void setAlarmTime(double alarmTime) {
+//        this.alarmTime = alarmTime;
+//    }
+//
+//    private double alarmTime;
+    private int hour;
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
+    }
+
+    private int minute;
 }

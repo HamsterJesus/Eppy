@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,8 @@ public class Alarm extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    List<AlarmItem> mAlarms;
 
     public Alarm() {
         // Required empty public constructor
@@ -54,6 +57,15 @@ public class Alarm extends Fragment {
         return fragment;
     }
 
+//    public void setAlarm(int alarmID) {
+//        AlarmItem currentAlarm = AlarmRepository.getRepository(getContext()).getAlarmById(alarmID);
+//        CharSequence text = "I have been set" + alarmID;
+//        int duration = Toast.LENGTH_SHORT;
+//
+//        Toast toast = Toast.makeText(requireContext(), text, duration);
+//        toast.show();
+//    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +73,8 @@ public class Alarm extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        this.mAlarms = new ArrayList<AlarmItem>();
     }
 
     @Override
@@ -88,24 +102,33 @@ public class Alarm extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
-        //testing
-        AlarmItem boo = new AlarmItem(), boo2 = new AlarmItem();
-        boo.setAlarmName("Dingus");
-        boo.setAlarmTime(8.5);
-        boo2.setAlarmName("PringleTube");
-        boo2.setAlarmTime(21);
-        //list tasks
-        List<AlarmItem> alarms = new ArrayList<>();
-        alarms.add(boo);
-        alarms.add(boo2);
+        //testing before db
+//        AlarmItem boo = new AlarmItem(), boo2 = new AlarmItem();
+//        boo.setAlarmName("Dingus");
+//        boo.setAlarmTime(8.5);
+//        boo2.setAlarmName("PringleTube");
+//        boo2.setAlarmTime(21);
+//        //list tasks
+//        List<AlarmItem> alarms = new ArrayList<>();
+//        alarms.add(boo);
+//        alarms.add(boo2);
 
         //get list view to display alarms
         ListView lv_alarms = view.findViewById(R.id.alarm_lv);
 
-        //use the alarms array adapter in list view
-        AlarmListItemViewAdapter adapter = new AlarmListItemViewAdapter(getContext(), R.layout.alarm_list_item, alarms);
+        //clear list view
+        mAlarms.clear();
 
-        lv_alarms.setAdapter(adapter);
+        //add alarms from repo
+        List<AlarmItem> alarmsToList= AlarmRepository.getRepository(getContext()).getAllAlarms();
+        mAlarms.addAll(alarmsToList);
+
+        //use the alarms array adapter in list view
+        if(mAlarms.size() > 0) {
+            AlarmListItemViewAdapter adapter = new AlarmListItemViewAdapter(getContext(), R.layout.alarm_list_item, alarmsToList);
+
+            lv_alarms.setAdapter(adapter);
+        }
 
     }
 }

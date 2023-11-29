@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {AlarmItem.class}, version=1)
+@Database(entities = {AlarmItem.class}, version=3, exportSchema = false)
 public abstract class AlarmDatabase extends RoomDatabase {
 
     //get DOA
@@ -17,7 +17,7 @@ public abstract class AlarmDatabase extends RoomDatabase {
         if(INSTANCE == null){
             synchronized (AlarmDatabase.class){
                 if(INSTANCE == null){
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AlarmDatabase.class, "alarm_database").fallbackToDestructiveMigration().build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AlarmDatabase.class, "alarm_database").fallbackToDestructiveMigration().allowMainThreadQueries().build();
                 }
             }
         }

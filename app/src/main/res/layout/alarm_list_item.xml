@@ -40,7 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/EditAlarmbtn"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SmallSp" />
+        tools:ignore="SmallSp,UseSwitchCompatOrMaterialXml" />
 
     <Button
         android:id="@+id/EditAlarmbtn"

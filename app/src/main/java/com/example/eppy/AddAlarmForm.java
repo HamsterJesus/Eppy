@@ -7,6 +7,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +66,63 @@ public class AddAlarmForm extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_alarm_form, container, false);
+
+//        ScrollView scrollView = view.findViewById(R.id.scrollViewAAF);
+//        scrollView.post(() -> {
+//            // Scroll to the bottom
+//            scrollView.fullScroll(View.FOCUS_DOWN);
+//        });
+
+        //Difficulty spinner
+        Spinner spinnerDifficulty = view.findViewById(R.id.difficultySpinner);
+
+        //render items in spinner
+        ArrayAdapter<CharSequence>adapterSpin=ArrayAdapter.createFromResource(getActivity(),R.array.Difficulty, android.R.layout.simple_spinner_item);
+        adapterSpin.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        spinnerDifficulty.setAdapter(adapterSpin);
+
+        //Form save button
+        Button saveButton = view.findViewById(R.id.saveButton); //find button
+
+        saveButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //get user inputed values for each variable
+                String alarmName = String.valueOf(((TextView) getView().findViewById(R.id.a_nameInput)).getText());
+//                double alarmTime = Double.parseDouble(((TextView) getView().findViewById(R.id.a_timeInput)).getText().toString());
+                int noOfQuestions = Integer.valueOf(((TextView) getView().findViewById(R.id.a_NoQuestionsInput)).getText().toString());
+
+                //time picker
+                TimePicker timePicker = getView().findViewById(R.id.timePicker);
+                int alarmHour = timePicker.getHour();
+                int alarmMinute = timePicker.getMinute();
+
+                Object selectedDifficulty = spinnerDifficulty.getSelectedItem();
+                String questionDifficulty = selectedDifficulty.toString();
+
+                //construct a url for trivia api using noOfQuestions and questionDifficulty
+                String url = "https://opentdb.com/api.php?amount=" + noOfQuestions + "&difficulty=" + questionDifficulty;
+
+                //create AlarmItem object to hold this data
+                AlarmItem newAlarm = new AlarmItem();
+                newAlarm.setAlarmSet(false);
+                newAlarm.setAlarmName(alarmName);
+                newAlarm.setHour(alarmHour);
+                newAlarm.setMinute(alarmMinute);
+                newAlarm.setQuizURL(url);
+
+                //save alarm to alarmRepo
+                AlarmRepository repo = AlarmRepository.getRepository(getContext());
+                repo.storeAlarm(newAlarm);
+
+                MainActivity.getNavController().navigate(R.id.alarm);
+            }
+        });
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_alarm_form, container, false);
+        return view;
     }
 }
