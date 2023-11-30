@@ -1,5 +1,7 @@
 package com.example.eppy;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -12,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -25,8 +28,10 @@ public class MainActivity extends AppCompatActivity {
     //create nav controller
     private static NavController navController;
     private AlarmManager alarmManager;
-    private BroadcastReceiver alarmReceiver;
+//    private BroadcastReceiver alarmReceiver;
     private PendingIntent pendingIntent;
+
+    EppyalarmReciever alarmReceiver = new EppyalarmReciever();
 
     public static NavController getNavController() {
         return navController;
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity", "I work");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -64,16 +70,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//
+//        alarmReceiver = new BroadcastReceiver(){
+//
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                Toast.makeText(context, "BEEP BEEP BEEP!", Toast.LENGTH_SHORT).show();
+//            }
+//        };
 
-        alarmReceiver = new BroadcastReceiver(){
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Toast.makeText(context, "BEEP BEEP BEEP!", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        registerReceiver(alarmReceiver, new IntentFilter("com.example.eppy.ALARM"), null, null,Context.RECEIVER_NOT_EXPORTED | 0);
+//        registerReceiver(alarmReceiver, new IntentFilter("com.example.eppy.ALARM"), null, null,Context.RECEIVER_NOT_EXPORTED | 0);
 
         soundTheAlarm();
     }
@@ -90,16 +96,24 @@ public class MainActivity extends AppCompatActivity {
                 calendar.set(Calendar.MINUTE, alarms.get(i).getMinute());
                 calendar.set(Calendar.SECOND,0);
 
+                registerReceiver(alarmReceiver, new IntentFilter("com.example.eppy.ALARM"), null, null,Context.RECEIVER_NOT_EXPORTED | 0);
                 //create intent to trigger when alarm go off
                 Intent alarmIntent = new Intent("com.example.eppy.ALARM");
-                pendingIntent = PendingIntent.getBroadcast(this,0,alarmIntent, PendingIntent.FLAG_IMMUTABLE);
+                pendingIntent = PendingIntent.getBroadcast(this,0,alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE);
+//                registerReceiver(alarmReceiver, alarmIntent);
 
                 //set alarm
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
                 Toast.makeText(this, "Alarm set for " + alarms.get(i).getHour() + ":" + alarms.get(i).getMinute(), Toast.LENGTH_SHORT).show();
             }
         }
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(alarmReceiver);
     }
 }
