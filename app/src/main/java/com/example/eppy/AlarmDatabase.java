@@ -6,10 +6,11 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+//database for AlarmItem and question
 @Database(entities = {AlarmItem.class, question.class}, version=5, exportSchema = false)
 public abstract class AlarmDatabase extends RoomDatabase {
 
-    //get DOA
+    //get DAO of both entities
     public abstract AlarmDAO alarmDAO();
     public abstract questionDAO questionDAO();
     private static AlarmDatabase INSTANCE;

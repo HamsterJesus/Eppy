@@ -51,12 +51,10 @@ public class quiz extends Fragment {
     private String mParam2;
 
 
-    private int mCurrentId;
+    private int mCurrentId; //id of AlarmItem instance
 
-    private AlarmItem currentAlarm;
+    private AlarmItem currentAlarm; //create alarm item
 
-    //next
-    //private boolean nextBool = false;
 
     private int currentQuestionIndex = 0;
 
@@ -97,36 +95,37 @@ public class quiz extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("Quiz Fragment", "Welcome" + mCurrentId);
+        Log.d("Quiz Fragment", "Welcome" + mCurrentId); //test
         View view = inflater.inflate(R.layout.fragment_quiz, container, false);
 
-        getQuizQuestions(view);
+        getQuizQuestions(view); //call get quiz question
 
         // Inflate the layout for this fragment
         return view;
     }
 
+    //method for parsing json api call and calling the display method
     private void getQuizQuestions(View view) {
+        //make a call to the AlarmRepository
         AlarmRepository repo = AlarmRepository.getRepository(getContext());
-        currentAlarm = repo.getAlarmById(mCurrentId);
-        String url = currentAlarm.getQuizURL();
-        //TextView textMan = view.findViewById(R.id.textMan);
+        currentAlarm = repo.getAlarmById(mCurrentId); //get alarm by id passed into fragment via bundle from AlarmListItemViewAdapter
+        String url = currentAlarm.getQuizURL(); //set url to value of url attribute from currentAlarm
 
+        //create requestQueue
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
+        //make request to api
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //textMan.setText("Response is: " + response.substring(0,500));
                         try {
-                            JSONObject jsonResponse = new JSONObject(response);
+                            JSONObject jsonResponse = new JSONObject(response); //jsonObject containing response from Open Trivia DB
 
                             //array of quiz questions
                             JSONArray resultsArray = jsonResponse.getJSONArray("results");
 
-                            //iterate over questions
+                            //iterate over every received question
                             for(int i = 0; i < resultsArray.length(); i++){
                                 JSONObject questionObject = resultsArray.getJSONObject(i);
 
@@ -141,22 +140,26 @@ public class quiz extends Fragment {
 
                                 //array for storing all answers
                                 List<String> answerArray = new ArrayList<>();
-                                for(int j = 0; j<incorrectArray.length(); j++){
+
+                                for(int j = 0; j<incorrectArray.length(); j++){ //loop through incorrectArray adding all the incorrect answers
                                     answerArray.add(incorrectArray.getString(j));
                                 }
 
-                                answerArray.add(correctAnswer);
+                                answerArray.add(correctAnswer); //add the correct answer to the array as well
 
-                                Collections.shuffle(answerArray);
+                                Collections.shuffle(answerArray); //randomise the order of the array to make the quiz more challenging
 
+                                //create a question object and add values to each attribute
                                 question newQuestion = new question();
                                 newQuestion.setActualQuestion(specificQuestion);
                                 newQuestion.setCorrectAnswer(correctAnswer);
                                 newQuestion.setAllAnswers(answerArray);
 
+                                //store the question object in the quetionTable database
                                 AlarmRepository repo = AlarmRepository.getRepository(getContext());
                                 repo.storeQuestion(newQuestion);
 
+                                //testing data is as it should be
                                 String tagResponse = "Testing testing 1 2 3";
 
                                 Log.d(tagResponse, "question: " + specificQuestion);
@@ -164,7 +167,7 @@ public class quiz extends Fragment {
                                 Log.d(tagResponse, "correct only: " + correctAnswer);
                             }
 
-                            displayQuestion(view);
+                            displayQuestion(view); //call display questions
 
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
@@ -180,7 +183,7 @@ public class quiz extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    //display question on ui
+    //display questions one at a time on the ui
     private void displayQuestion(View view) {
 
         //get ui components in quiz fragment
@@ -189,36 +192,44 @@ public class quiz extends Fragment {
         Button nextQuestionBtn = view.findViewById(R.id.nextQuestionBtn);
         TextView Correctness = view.findViewById(R.id.displayCorrectness);
 
+        //get questions from the questionTable
         List<question> allQuestions = AlarmRepository.getRepository(getContext()).getAllQuestions();
         question currentQuestion = allQuestions.get(currentQuestionIndex);
 
         actualQuestion.setText(currentQuestion.getActualQuestion());
 
         //RADIO GROUP
-        List<String> possibleAnswers = currentQuestion.getAllAnswers();
+        List<String> possibleAnswers = currentQuestion.getAllAnswers(); //list of answers to a question
 
+        //iterate over each answer
         for(String answer : possibleAnswers){
+            //add the answers value to a radioButton
             RadioButton radioButton = new RadioButton(getContext());
             radioButton.setText(answer);
+
+            //add radio button to radio group
             multipleChoices.addView(radioButton);
         }
 
+        //Radio group item selected
         multipleChoices.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            //@SuppressLint("SetTextI18n")
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton selectedRadioButton = view.findViewById(checkedId);
-                if (selectedRadioButton != null) {
+                RadioButton selectedRadioButton = view.findViewById(checkedId); //find RadioButton
+                if (selectedRadioButton != null) { //only do if not null
+                    //get value of selectedAnswer
                     String selectedAnswer = selectedRadioButton.getText().toString();
-                    // Print a message with the selected answer
+
+                    // testing
                     Log.d("SelectedAnswer", selectedAnswer + " : " + currentQuestion.getCorrectAnswer());
 
-                    if(selectedAnswer.equals(currentQuestion.getCorrectAnswer().trim())){
-                        Correctness.setText("Correct :)");
+                    if(selectedAnswer.equals(currentQuestion.getCorrectAnswer().trim())){ //compare selectedAnswer and correctAnswer
+                        Correctness.setText("Correct :)"); //if the same display this to user
                     } else {
-                        Correctness.setText("Incorrect :(");
+                        Correctness.setText("Incorrect :("); //if different displat this to user
                     }
 
+                    //testing
                     Log.d("SelectedAnswer", "Selected Answer: " + selectedAnswer);
                 }
             }
@@ -230,17 +241,17 @@ public class quiz extends Fragment {
 
             @Override
             public void onClick(View v) {
-                currentQuestionIndex++;
-                multipleChoices.removeAllViews();
-                Correctness.setText("");
+                currentQuestionIndex++; //increment question index by 1
+                multipleChoices.removeAllViews(); //remove current RadioButtons from RadioGroup for new answers
+                Correctness.setText(""); //reset correctness text to be blank
 
-                if(currentQuestionIndex >= allQuestions.size()){
-                    MainActivity.getNavController().navigate(R.id.alarm);
-                    AlarmRepository.getRepository(getContext()).deleteQuestions(allQuestions);
-                    return;
+                if(currentQuestionIndex >= allQuestions.size()){ //if out of questions
+                    MainActivity.getNavController().navigate(R.id.alarm); //navigate back to alarm fragment
+                    AlarmRepository.getRepository(getContext()).deleteQuestions(allQuestions); //delete all the questions so next time the user will get new questions
+                    return; //break out of method
                 }
 
-                displayQuestion(view);
+                displayQuestion(view); //recursive call but with the currentQuestionIndex increased to access a different question
             }
         });
     }

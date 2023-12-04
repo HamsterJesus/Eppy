@@ -68,12 +68,6 @@ public class AddAlarmForm extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_alarm_form, container, false);
 
-//        ScrollView scrollView = view.findViewById(R.id.scrollViewAAF);
-//        scrollView.post(() -> {
-//            // Scroll to the bottom
-//            scrollView.fullScroll(View.FOCUS_DOWN);
-//        });
-
         //Difficulty spinner
         Spinner spinnerDifficulty = view.findViewById(R.id.difficultySpinner);
 
@@ -89,16 +83,17 @@ public class AddAlarmForm extends Fragment {
 
             @Override
             public void onClick(View v) {
-                //get user inputed values for each variable
+                //get user inputted values for each variable
                 String alarmName = String.valueOf(((TextView) getView().findViewById(R.id.a_nameInput)).getText());
 //                double alarmTime = Double.parseDouble(((TextView) getView().findViewById(R.id.a_timeInput)).getText().toString());
                 int noOfQuestions = Integer.valueOf(((TextView) getView().findViewById(R.id.a_NoQuestionsInput)).getText().toString());
 
-                //time picker
+                //get values from time picker
                 TimePicker timePicker = getView().findViewById(R.id.timePicker);
                 int alarmHour = timePicker.getHour();
                 int alarmMinute = timePicker.getMinute();
 
+                //get values from spinner
                 Object selectedDifficulty = spinnerDifficulty.getSelectedItem();
                 String questionDifficulty = selectedDifficulty.toString();
 
@@ -117,6 +112,7 @@ public class AddAlarmForm extends Fragment {
                 AlarmRepository repo = AlarmRepository.getRepository(getContext());
                 repo.storeAlarm(newAlarm);
 
+                //return to the alarm page
                 MainActivity.getNavController().navigate(R.id.alarm);
             }
         });

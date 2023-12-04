@@ -8,9 +8,11 @@ import androidx.room.Query;
 
 import java.util.List;
 
+//create DAO for questionTable
 @Dao
 public interface questionDAO {
 
+    //queries for questionTable
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertQuestion(question newQuestion);
 

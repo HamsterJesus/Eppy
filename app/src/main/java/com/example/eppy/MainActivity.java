@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     EppyalarmReciever alarmReceiver = new EppyalarmReciever();
 
+    //used for calling accessing navcontroller inside fragments
     public static NavController getNavController() {
         return navController;
     }
@@ -55,17 +56,17 @@ public class MainActivity extends AppCompatActivity {
         //define nav fragment
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navFragment);
 
-        navController = navHostFragment.getNavController();
-        BottomNavigationView bottomNav = findViewById(R.id.navBar);
-        NavigationUI.setupWithNavController(bottomNav, navController);
+        navController = navHostFragment.getNavController(); //define nav controller
+        BottomNavigationView bottomNav = findViewById(R.id.navBar); //find nav bar
+        NavigationUI.setupWithNavController(bottomNav, navController); //set up NavigationUI for nav bar
 
         //when buttons clicked on nav bar
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            if(itemId == R.id.homeMenuItem){
+            if(itemId == R.id.homeMenuItem){ //go to home fragment
                 navController.navigate(R.id.home2);
-            } else if(itemId == R.id.alarmMenuItem){
+            } else if(itemId == R.id.alarmMenuItem){ //go to alarm fragment
                 navController.navigate(R.id.alarm);
             }
 
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        //attempts at AlarmManager code
         //alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 //
 //        alarmReceiver = new BroadcastReceiver(){
@@ -115,11 +117,14 @@ public class MainActivity extends AppCompatActivity {
 //                if(pendingIntent !=null && alarmManager != null){
 //                    alarmManager.cancel(pendingIntent);
 //                }
-                alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent("com.example.eppy.ALARM");
-                alarmIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
 
+                //create alarm manager
+                alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent("com.example.eppy.ALARM"); //intent with action "com.example.eppy.ALARM"
+                alarmIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE); //build alarmIntent
+                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent); //construct alarm with time form calendar
+
+                //toast message to ui saying when alarm went off
                 Toast.makeText(this, "Alarm set for " + alarms.get(i).getHour() + ":" + alarms.get(i).getMinute(), Toast.LENGTH_SHORT).show();
             }
         }
@@ -132,27 +137,28 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         soundTheAlarm();
         //registerReceiver(alarmReceiver, new IntentFilter("com.example.eppy.ALARM"), null, null,Context.RECEIVER_NOT_EXPORTED | 0);
-        IntentFilter intentFilter = new IntentFilter("com.example.eppy.ALARM");
-        EppyalarmReciever alarmReceiver = new EppyalarmReciever();
-        registerReceiver(alarmReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+        IntentFilter intentFilter = new IntentFilter("com.example.eppy.ALARM"); //intent filter matching action in sound alarm
+        EppyalarmReciever alarmReceiver = new EppyalarmReciever(); //initialise custom receiver object
+        registerReceiver(alarmReceiver, intentFilter, Context.RECEIVER_EXPORTED); //register the receiver
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(alarmReceiver);
+        unregisterReceiver(alarmReceiver); //unregister the receiver
     }
 
+    //unused function for notifications as alarm doesn't work
     private void createNotificationChannel(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name = getString(R.string.channel_name);
             //desc
 
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            String channel_id = "channel_01";
-            NotificationChannel channel = new NotificationChannel(channel_id, name, importance);
+            int importance = NotificationManager.IMPORTANCE_HIGH; //make noise
+            String channel_id = "channel_01"; //name of channel
+            NotificationChannel channel = new NotificationChannel(channel_id, name, importance); //create channel
 
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class); //set up notification service
             notificationManager.createNotificationChannel(channel);
         }
     }

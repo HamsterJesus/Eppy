@@ -26,6 +26,10 @@
     <string name="howTxt">Head over to the alarm page and press “Add New Alarm” button. This will take you to a form to set a name and time for the alarm. And select a number of questions and difficulty for the morning trivia.</string>
     <string name="note">Note:</string>
     <string name="noteTxt">The functionality for making the alarms go off is broken. So for now to test out the trivia press the “Trivia” button on the alarm page after setting an alarm.</string>
+    <string name="test_alarm">Test Alarm</string>
+    <string name="time">Time</string>
+    <string name="trivia">Trivia</string>
+    <string name="delete">Delete</string>
 
     //difficulty
     <string-array name="Difficulty">

@@ -11,6 +11,9 @@ import java.util.List;
 
 @Dao
 public interface AlarmDAO {
+    //Dao for alarmItem
+
+    //create some queries
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insert(AlarmItem alarmItem);
 

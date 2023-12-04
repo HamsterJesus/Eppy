@@ -33,6 +33,7 @@ public class Alarm extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    //create list for storing alarmItems to go into the adapter for list view
     List<AlarmItem> mAlarms;
 
     public Alarm() {
@@ -57,15 +58,6 @@ public class Alarm extends Fragment {
         return fragment;
     }
 
-//    public void setAlarm(int alarmID) {
-//        AlarmItem currentAlarm = AlarmRepository.getRepository(getContext()).getAlarmById(alarmID);
-//        CharSequence text = "I have been set" + alarmID;
-//        int duration = Toast.LENGTH_SHORT;
-//
-//        Toast toast = Toast.makeText(requireContext(), text, duration);
-//        toast.show();
-//    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +74,7 @@ public class Alarm extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
 
-        //redirect user to add new button form page
+        //Redirect user to "addAlarmForm" fragment on click
         Button addNewRedirect = view.findViewById(R.id.newAlarmBtn);
 
         addNewRedirect.setOnClickListener(new View.OnClickListener(){
@@ -102,28 +94,17 @@ public class Alarm extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
-        //testing before db
-//        AlarmItem boo = new AlarmItem(), boo2 = new AlarmItem();
-//        boo.setAlarmName("Dingus");
-//        boo.setAlarmTime(8.5);
-//        boo2.setAlarmName("PringleTube");
-//        boo2.setAlarmTime(21);
-//        //list tasks
-//        List<AlarmItem> alarms = new ArrayList<>();
-//        alarms.add(boo);
-//        alarms.add(boo2);
-
         //get list view to display alarms
         ListView lv_alarms = view.findViewById(R.id.alarm_lv);
 
-        //clear list view
+        //clear list view of previous items
         mAlarms.clear();
 
-        //add alarms from repo
+        //add alarms from repo to list
         List<AlarmItem> alarmsToList= AlarmRepository.getRepository(getContext()).getAllAlarms();
         mAlarms.addAll(alarmsToList);
 
-        //use the alarms array adapter in list view
+        //create a list view adapter to display the alarms
         if(mAlarms.size() > 0) {
             AlarmListItemViewAdapter adapter = new AlarmListItemViewAdapter(getContext(), R.layout.alarm_list_item, alarmsToList);
 

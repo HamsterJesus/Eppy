@@ -25,7 +25,7 @@ public class AlarmListItemViewAdapter extends ArrayAdapter<AlarmItem> {
 
     //array adapter context
     private Context context;
-//    private AlarmFragmentListener listener;
+
 
     //list of alarms to display
     private List<AlarmItem> alarms;
@@ -35,7 +35,6 @@ public class AlarmListItemViewAdapter extends ArrayAdapter<AlarmItem> {
         super(context, resource, objects);
         this.context = context;
         this.alarms = objects;
-//        this.listener = listener;
     }
 
     @NonNull
@@ -57,38 +56,37 @@ public class AlarmListItemViewAdapter extends ArrayAdapter<AlarmItem> {
         //Time
         int hours = alarm.getHour();  // Extract the whole number part as hours
         int minutes = alarm.getMinute();  // Extract the decimal part as minutes
-        int alarmID = alarm.getUid();
 
         // Format the time
         String formattedTime = String.format("%02d:%02d", hours, minutes);
 
         TextView tv_alarmTime = itemView.findViewById(R.id.alarmSetFortxt);
-        tv_alarmTime.setText(formattedTime);
+        tv_alarmTime.setText(formattedTime); //display time in listview
 
         //alarms triggering
         Switch alarmSwitch = itemView.findViewById(R.id.SetAlarmbtn);
-        alarmSwitch.setChecked(alarm.isAlarmSet());
+        alarmSwitch.setChecked(alarm.isAlarmSet()); //change checked state based on if alarm is set
         alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                //if alarm checked = true
                 if(isChecked){
+                    //update alarm in repo so that set is true
                     alarm.setAlarmSet(true);
                     AlarmRepository.getRepository(getContext()).updateAlarm(alarm);
 
+                    //display toast message on ui saying "I have been set"
                     CharSequence text = "I have been set";
                     int duration = Toast.LENGTH_SHORT;
 
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
-//                    Alarm instance = new Alarm();
-//                    instance.setAlarm(alarmID);
-//                    if (context instanceof AlarmFragmentListener){
-//                        listener.setAlarm(alarmID);
-//                    }
-                } else {
+                } else { //if alarm checked = false
+                    //update alarm in repo so that set is false
                     alarm.setAlarmSet(false);
                     AlarmRepository.getRepository(getContext()).updateAlarm(alarm);
 
+                    //display toast message on ui saying "I have been unset"
                     CharSequence text = "I have been unset";
                     int duration = Toast.LENGTH_SHORT;
 
@@ -100,16 +98,16 @@ public class AlarmListItemViewAdapter extends ArrayAdapter<AlarmItem> {
         });
 
         //quiz button
-        Button EditAlarmbtn = itemView.findViewById(R.id.EditAlarmbtn);
+        Button triviaButton = itemView.findViewById(R.id.Triviabtn);
 
-        EditAlarmbtn.setOnClickListener(new View.OnClickListener(){
+        triviaButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putInt(quiz.ARG_PARAM_CurrentId, alarm.getUid());
+                Bundle bundle = new Bundle(); //create bundle
+                bundle.putInt(quiz.ARG_PARAM_CurrentId, alarm.getUid()); //put id of selected list item in bundle
 
-
+                //navigate to quiz fragment with bundle
                 MainActivity.getNavController().navigate(R.id.quiz, bundle);
             }
         });
@@ -121,10 +119,12 @@ public class AlarmListItemViewAdapter extends ArrayAdapter<AlarmItem> {
 
             @Override
             public void onClick(View v) {
-                Log.d("DeleteAlarm", "Deleting alarm: " + alarm.getUid());
+                Log.d("DeleteAlarm", "Deleting alarm: " + alarm.getUid()); //testing
+
+                //delete selected alarm from the alarmTable
                 AlarmRepository.getRepository(getContext()).delete(alarm);
-                alarms.remove(position);
-                notifyDataSetChanged();
+                alarms.remove(position); //remove selected alarm from alarms list so it isn't seen in listview
+                notifyDataSetChanged(); //lest listview know it's been edited
             }
         });
 

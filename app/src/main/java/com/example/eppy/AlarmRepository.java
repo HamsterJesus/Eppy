@@ -4,11 +4,14 @@ import android.content.Context;
 
 import java.util.List;
 
+//create repo for both the alarmTable and questionTable
 public class AlarmRepository {
 
+    //initialise DAO for both
     private AlarmDAO r_alarmDAO;
     private questionDAO r_questionDAO;
 
+    //initialise repo and context
     private static AlarmRepository INSTANCE;
     private Context context;
 
@@ -30,6 +33,7 @@ public class AlarmRepository {
         return INSTANCE;
     }
 
+    //create methods that reflect queries in both DAO
     public void storeAlarm(AlarmItem newAlarm){
         this.r_alarmDAO.insert(newAlarm);
     }

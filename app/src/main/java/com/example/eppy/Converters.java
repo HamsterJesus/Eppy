@@ -7,6 +7,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+//Type converter for Lists so they can be stored properly in room database
+//used in question.class
 public class Converters {
 
     @TypeConverter
