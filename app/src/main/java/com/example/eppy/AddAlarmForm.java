@@ -103,7 +103,7 @@ public class AddAlarmForm extends Fragment {
                 String questionDifficulty = selectedDifficulty.toString();
 
                 //construct a url for trivia api using noOfQuestions and questionDifficulty
-                String url = "https://opentdb.com/api.php?amount=" + noOfQuestions + "&difficulty=" + questionDifficulty;
+                String url = "https://opentdb.com/api.php?amount=" + noOfQuestions + "&difficulty=" + questionDifficulty + "&type=multiple";
 
                 //create AlarmItem object to hold this data
                 AlarmItem newAlarm = new AlarmItem();

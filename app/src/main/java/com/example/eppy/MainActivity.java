@@ -8,13 +8,19 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static NavController navController;
     private AlarmManager alarmManager;
 //    private BroadcastReceiver alarmReceiver;
-    private PendingIntent pendingIntent;
+    private PendingIntent alarmIntent;
 
     EppyalarmReciever alarmReceiver = new EppyalarmReciever();
 
@@ -61,15 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.home2);
             } else if(itemId == R.id.alarmMenuItem){
                 navController.navigate(R.id.alarm);
-            } else if (itemId == R.id.settingsMenuItem) {
-                navController.navigate(R.id.settings);
             }
 
 
             return true;
         });
 
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        //alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 //
 //        alarmReceiver = new BroadcastReceiver(){
 //
@@ -79,9 +84,10 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        };
 
+
 //        registerReceiver(alarmReceiver, new IntentFilter("com.example.eppy.ALARM"), null, null,Context.RECEIVER_NOT_EXPORTED | 0);
 
-        soundTheAlarm();
+       // soundTheAlarm();
     }
 
     private void soundTheAlarm() {
@@ -96,14 +102,23 @@ public class MainActivity extends AppCompatActivity {
                 calendar.set(Calendar.MINUTE, alarms.get(i).getMinute());
                 calendar.set(Calendar.SECOND,0);
 
-                registerReceiver(alarmReceiver, new IntentFilter("com.example.eppy.ALARM"), null, null,Context.RECEIVER_NOT_EXPORTED | 0);
-                //create intent to trigger when alarm go off
-                Intent alarmIntent = new Intent("com.example.eppy.ALARM");
-                pendingIntent = PendingIntent.getBroadcast(this,0,alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE);
-//                registerReceiver(alarmReceiver, alarmIntent);
-
-                //set alarm
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//                registerReceiver(alarmReceiver, new IntentFilter("com.example.eppy.ALARM"), null, null,Context.RECEIVER_NOT_EXPORTED | 0);
+//                //create intent to trigger when alarm go off
+//                Intent intent = new Intent("com.example.eppy.ALARM");
+//                pendingIntent = PendingIntent.getBroadcast(this,0,alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE);
+////                registerReceiver(alarmReceiver, alarmIntent);
+//
+//                //set alarm
+//                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//                PendingIntent pendingIntent = PendingIntent.getService(context, requestId, intent, PendingIntent.FLAG_NO_CREATE);
+//                if(pendingIntent !=null && alarmManager != null){
+//                    alarmManager.cancel(pendingIntent);
+//                }
+                alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent("com.example.eppy.ALARM");
+                alarmIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
 
                 Toast.makeText(this, "Alarm set for " + alarms.get(i).getHour() + ":" + alarms.get(i).getMinute(), Toast.LENGTH_SHORT).show();
             }
@@ -111,9 +126,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected  void onStart() {
+        super.onStart();
+        soundTheAlarm();
+        //registerReceiver(alarmReceiver, new IntentFilter("com.example.eppy.ALARM"), null, null,Context.RECEIVER_NOT_EXPORTED | 0);
+        IntentFilter intentFilter = new IntentFilter("com.example.eppy.ALARM");
+        EppyalarmReciever alarmReceiver = new EppyalarmReciever();
+        registerReceiver(alarmReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
         unregisterReceiver(alarmReceiver);
+    }
+
+    private void createNotificationChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = getString(R.string.channel_name);
+            //desc
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            String channel_id = "channel_01";
+            NotificationChannel channel = new NotificationChannel(channel_id, name, importance);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

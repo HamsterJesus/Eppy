@@ -1,10 +1,13 @@
 package com.example.eppy;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -96,10 +99,36 @@ public class AlarmListItemViewAdapter extends ArrayAdapter<AlarmItem> {
             }
         });
 
+        //quiz button
+        Button EditAlarmbtn = itemView.findViewById(R.id.EditAlarmbtn);
+
+        EditAlarmbtn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(quiz.ARG_PARAM_CurrentId, alarm.getUid());
+
+
+                MainActivity.getNavController().navigate(R.id.quiz, bundle);
+            }
+        });
+
+        //delete button
+        Button deleteButton = itemView.findViewById(R.id.DeleteAlarmbtn);
+
+        deleteButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Log.d("DeleteAlarm", "Deleting alarm: " + alarm.getUid());
+                AlarmRepository.getRepository(getContext()).delete(alarm);
+                alarms.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
+
         return itemView;
     }
-
-//    public interface AlarmFragmentListener {
-//        void setAlarm(int alarmID);
-//    }
 }

@@ -13,10 +13,4 @@
         android:layout_height="wrap_content"
         android:icon="@drawable/baseline_access_alarm_24"
         android:title="@string/tempAlarm" />
-    <item
-        android:id="@+id/settingsMenuItem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:icon="@drawable/baseline_settings_24"
-        android:title="@string/tempSettings" />
 </menu>

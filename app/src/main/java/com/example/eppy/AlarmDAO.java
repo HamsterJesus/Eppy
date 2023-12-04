@@ -1,6 +1,7 @@
 package com.example.eppy;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -21,4 +22,7 @@ public interface AlarmDAO {
 
     @Update
     void update(AlarmItem alarm);
+
+    @Delete
+    public void delete(AlarmItem alarm);
 }

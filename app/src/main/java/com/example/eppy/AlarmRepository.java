@@ -1,13 +1,13 @@
 package com.example.eppy;
 
 import android.content.Context;
-import android.provider.CalendarContract;
 
 import java.util.List;
 
 public class AlarmRepository {
 
     private AlarmDAO r_alarmDAO;
+    private questionDAO r_questionDAO;
 
     private static AlarmRepository INSTANCE;
     private Context context;
@@ -17,6 +17,7 @@ public class AlarmRepository {
         this.context = context;
 
         r_alarmDAO = AlarmDatabase.getDatabase(context).alarmDAO();
+        r_questionDAO = AlarmDatabase.getDatabase(context).questionDAO();
     }
 
     public static AlarmRepository getRepository(Context context){
@@ -43,5 +44,21 @@ public class AlarmRepository {
 
     public AlarmItem getAlarmById(int id){
         return r_alarmDAO.getAlarmById(id);
+    }
+
+    public void delete(AlarmItem alarm){
+         r_alarmDAO.delete(alarm);
+    }
+
+    public void storeQuestion(question newQuestion){
+        this.r_questionDAO.insertQuestion(newQuestion);
+    }
+
+    public List<question> getAllQuestions() {
+        return  r_questionDAO.getAllQuestions();
+    }
+
+    public void deleteQuestions(List<question> allQuestions) {
+        r_questionDAO.deleteAllQuestions(allQuestions);
     }
 }

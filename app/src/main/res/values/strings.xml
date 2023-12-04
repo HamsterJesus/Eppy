@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Eppy</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="tempHome">Home Page</string>
+    <string name="tempHome">Welcome to Eppy!</string>
     <string name="tempSettings">Settings Page</string>
     <string name="tempAlarm">Alarm Page</string>
 
@@ -17,6 +17,15 @@
     <string name="number_of_questions">Number of Questions(3-10)</string>
     <string name="select_difficulty">Select Difficulty</string>
     <string name="save">Save</string>
+    <string name="channel_name">Eppy alarm\n</string>
+    <string name="next_question">Next question</string>
+    <string name="sample_text">sample text</string>
+    <string name="description">Description:</string>
+    <string name="eppyDescActual">The idea is that Eppy will help you to wake up in the morning by preventing you from hitting the snooze button and instead forcing you to do a set of trivia questions to jump start your brain.</string>
+    <string name="how_to_use">How to use:</string>
+    <string name="howTxt">Head over to the alarm page and press “Add New Alarm” button. This will take you to a form to set a name and time for the alarm. And select a number of questions and difficulty for the morning trivia.</string>
+    <string name="note">Note:</string>
+    <string name="noteTxt">The functionality for making the alarms go off is broken. So for now to test out the trivia press the “Trivia” button on the alarm page after setting an alarm.</string>
 
     //difficulty
     <string-array name="Difficulty">
@@ -25,7 +34,7 @@
         <item>hard</item>
     </string-array>
 
-<!--    <string name="Easy">Easy</string>-->
-<!--    <string name="Medium">Medium</string>-->
-<!--    <string name="Hard">Hard</string>-->
+    <!--    <string name="Easy">Easy</string>-->
+    <!--    <string name="Medium">Medium</string>-->
+    <!--    <string name="Hard">Hard</string>-->
 </resources>
